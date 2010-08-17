@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><rss version="2.0"><channel>
 <title>JR Boyens's Git Achievements</title>
+<item><title>Apprentice Seamstress (Level 2)</title><description>amended a commit with git commit --amend.</description></item>
 <item><title>Cherry Picker</title><description>Used git cherry-pick to add a sha from another branch into the current branch.</description></item>
 <item><title>Banker (Level 4)</title><description>Join two or more development histories together with git merge.</description></item>
 <item><title>Weaver</title><description>Investigate old branches by using git reflog</description></item>
@@ -19,5 +20,4 @@
 <item><title>Apprentice Traveler (Level 3)</title><description>Streamed changes between another rcs with git svn or git p4.</description></item>
 <item><title>Apprentice Merchant (Level 1)</title><description>Added an external repository with git remote add.</description></item>
 <item><title>Apprentice Archivist (Level 1)</title><description>Prepare each commit with its patch in one file per commit with git format-patch</description></item>
-<item><title>Apprentice Seamstress (Level 1)</title><description>amended a commit with git commit --amend.</description></item>
 </channel></rss>
