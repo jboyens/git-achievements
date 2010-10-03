@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><rss version="2.0"><channel>
 <title>JR Boyens's Git Achievements</title>
+<item><title>Apprentice Blacksmith (Level 2)</title><description>Created a branch using git checkout -b.</description></item>
 <item><title>Cleaning lady (Level 4)</title><description>Remove untracked files from the working tree with git clean</description></item>
 <item><title>Apprentice Seamstress (Level 3)</title><description>amended a commit with git commit --amend.</description></item>
 <item><title>Apprentice Blacksmith (Level 1)</title><description>Created a branch using git checkout -b.</description></item>
@@ -19,5 +20,4 @@
 <item><title>Weaver</title><description>Investigate old branches by using git reflog</description></item>
 <item><title>Apprentice Cleaning lady (Level 3)</title><description>Remove untracked files from the working tree with git clean</description></item>
 <item><title>Master Stone Mason (Level 7)</title><description>Added files to the index area for inclusion in the next commit with git add</description></item>
-<item><title>Apprentice Merchant (Level 2)</title><description>Added an external repository with git remote add.</description></item>
 </channel></rss>
