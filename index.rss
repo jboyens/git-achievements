@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><rss version="2.0"><channel>
 <title>JR Boyens's Git Achievements</title>
+<item><title>Apprentice Gipsy (Level 1)</title><description>Create, list, delete a tag signed with GPG using git tag</description></item>
 <item><title>Product Manager (Level 6)</title><description>Stash the changes in a dirty working directory away with git stash.</description></item>
 <item><title>Master Author (Level 8)</title><description>Made 2^Level commits using git commit.</description></item>
 <item><title>Product Manager (Level 5)</title><description>Stash the changes in a dirty working directory away with git stash.</description></item>
@@ -19,5 +20,4 @@
 <item><title>Apprentice Butcher (Level 1)</title><description>Performed an interactive rebase using git rebase -i.</description></item>
 <item><title>Messenger (Level 4)</title><description>Applied a patch using git am.</description></item>
 <item><title>Apprentice Archivist (Level 2)</title><description>Prepare each commit with its patch in one file per commit with git format-patch</description></item>
-<item><title>Apprentice Web Designer (Level 2)</title><description>Instantly browse your working repository in gitweb with git instaweb</description></item>
 </channel></rss>
