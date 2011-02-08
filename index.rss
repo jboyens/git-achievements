@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><rss version="2.0"><channel>
 <title>JR Boyens's Git Achievements</title>
+<item><title>Apprentice Web Designer (Level 3)</title><description>Instantly browse your working repository in gitweb with git instaweb</description></item>
 <item><title>Seamstress (Level 4)</title><description>amended a commit with git commit --amend.</description></item>
 <item><title>Apprentice Butcher (Level 2)</title><description>Performed an interactive rebase using git rebase -i.</description></item>
 <item><title>Presenter (Level 6)</title><description>Shows one or more objects (blobs, trees, tags and commits) with git show</description></item>
@@ -19,5 +20,4 @@
 <item><title>Cleaning lady (Level 4)</title><description>Remove untracked files from the working tree with git clean</description></item>
 <item><title>Apprentice Seamstress (Level 3)</title><description>amended a commit with git commit --amend.</description></item>
 <item><title>Apprentice Blacksmith (Level 1)</title><description>Created a branch using git checkout -b.</description></item>
-<item><title>Messenger (Level 5)</title><description>Applied a patch using git am.</description></item>
 </channel></rss>
