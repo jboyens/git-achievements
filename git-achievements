@@ -10,10 +10,7 @@
 # 2. Redistributions in binary form must reproduce the above copyright
 #    notice, this list of conditions and the following disclaimer in the
 #    documentation and/or other materials provided with the distribution.
-# 3. All advertising materials mentioning features or use of this software
-#    must display the following acknowledgement:
-#    This product includes software developed by the <organization>.
-# 4. Neither the name of the project nor the
+# 3. Neither the name of the project nor the
 #    names of its contributors may be used to endorse or promote products
 #    derived from this software without specific prior written permission.
 #
@@ -46,7 +43,7 @@ function git_achievements_command
             echo ""
             echo "Options:"
             echo "    -l --list    Show all achievements."
-            echo "    -p --publish Generate achievements html files and if achievements.upload not set to \"true\" add the files and push to origin."
+            echo "    -p --publish Generate achievements html files and if achievements.upload is set to \"true\" add the files and push to origin."
             ;;
     esac
 }
@@ -86,13 +83,14 @@ function unlock_achievement()
 
 function count_command
 {
-    export power=`awk "START {n=0} /$1/ {n++} END { print log(n)/log(2) }" "$ACTIONLOGFILE"`
-    export count=`awk "START {n=0} /$1/ {n++} END { print n }" "$ACTIONLOGFILE"`
-    #export powerof2=`awk "START {n=0} /$1/ {n++} END { print and(n, n-1) }" "$ACTIONLOGFILE"`
+    export power=`awk "BEGIN {n=0} /$1/ {n++} END { print log(n)/log(2) }" "$ACTIONLOGFILE"`
+    export count=`awk "BEGIN {n=0} /$1/ {n++} END { print n }" "$ACTIONLOGFILE"`
+    #export powerof2=`awk "BEGIN {n=0} /$1/ {n++} END { print and(n, n-1) }" "$ACTIONLOGFILE"`
     # mysys gawk it old and doesn't have the bitwise operation and :( so we have to use perl for now
     export powerof2=`echo 'use Env; $y=$ENV{'count'}; $x=($y & ($y-1)); print "$x\n" ' | perl -`
 
-    if [ ${count} -eq 1 ] ; then
+    # Set a default value of 0. Bug seems to occur when the achievement is unlocked
+    if [ ${count:-0} -eq 1 ] ; then
         powerof2="1"
     fi
     #echo "cmd: $1 powerof2: $powerof2 power: $power count: $count"
@@ -183,7 +181,7 @@ function check_for_achievements
             count_unlock_achievement "Hunter" "Used git bisect to perform a binary search to find which change introduced a bug." "$1"
             ;;
         blame )
-            count_unlock_achievement "Investigator" "Used git blame to annotates a file with information about how each line changed." "$1"
+            count_unlock_achievement "Investigator" "Used git blame to annotate a file with information about how each line changed." "$1"
             ;;
         bundle )
             count_unlock_achievement "Delivery Boy" "Move objects and refs by archive with git bundle." "$1"
@@ -203,7 +201,7 @@ function check_for_achievements
             ;;
         commit )
             count_unlock_achievement "Author" "Made 2^Level commits using git commit." "$1"
-            if [ "`git log --oneline | wc -l`" -eq "1" ] ; then
+            if [ "`git log --pretty=oneline | wc -l`" -eq "1" ] ; then
                 unlock_achievement "Let there be light" "Commit without a parent." "$1"
             fi
             case $2 in
@@ -270,10 +268,17 @@ function check_for_achievements
             count_unlock_achievement "Banker" "Join two or more development histories together with git merge." "$1"
             ;;
         push )
-            count_unlock_achievement "Socialite" "pushed a branch to a remote repository using git push" "$1"
             case $2 in
-                -f )
-                count_unlock_achievement "Thug" "Forced pushed a branch with git push -f" "push -f"
+                -n|--dry-run )
+                ;;
+            * )
+                # not a dry run
+                count_unlock_achievement "Socialite" "pushed a branch to a remote repository using git push" "$1"
+                case $2 in
+                    -f )
+                    count_unlock_achievement "Thug" "Forced pushed a branch with git push -f" "push -f"
+                    ;;
+                esac
                 ;;
             esac
             ;;
@@ -314,6 +319,16 @@ function check_for_achievements
         stash )
             count_unlock_achievement "Product Manager" "Stash the changes in a dirty working directory away with git stash." "$1"
             ;;
+        submodule )
+            case $2 in
+                add )
+                count_unlock_achievement "Cathedral Architect" "Added a submodule to a repository." "submodule add"
+                ;;
+                update )
+                count_unlock_achievement "Cathedral Worker" "Cloned submodule repository and checked out commits specified by superproject." "submodule update"
+                ;;
+            esac
+            ;;
         svn|p4 )
             count_unlock_achievement "Traveler" "Streamed changes between another rcs with git svn or git p4." "$1"
             ;;
@@ -322,6 +337,9 @@ function check_for_achievements
             ;;
         whatchanged )
             count_unlock_achievement "News Reader" "Show logs with difference each commit introduces with git whatchanged" "$1"
+            ;;
+        flow )
+            count_unlock_achievement "Pedantic" "Use the flow extension to encourage an orderly and standardized branching model" "$1"
             ;;
         hash-object|update-index|commit-tree|update-ref )
             count_unlock_achievement "Plumber" "Use the internal plumbing commands of git." "$1"
@@ -358,11 +376,12 @@ function publish_achievements
     user=`git config --global user.name`
 
 echo "
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>
 <title>${user}'s Git Achievements</title>
-<link rel=\"alternate\" type=\"application/rss+xml\" title\"rss feed\" href=\"index.rss\"/>
+<link rel=\"alternate\" type=\"application/rss+xml\" title=\"rss feed\" href=\"index.rss\"/>
 <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"/>
 </head>
 <body>
@@ -390,7 +409,7 @@ echo "
     # Git Commands
     echo 'Git commands sorted by usage:' >> index.html
     echo "<pre style=\"text-align: left\">" >> index.html
-    cat  "${ACTIONLOGFILE}" | grep -v Date | awk '{ print $1 }' | sort | uniq -c | sort -nr >> index.html
+    cat  "${ACTIONLOGFILE}" | grep -v Date | grep -v 'git-dir' | awk '{ print $1 }' | sort | uniq -c | sort -nr >> index.html
     echo "</pre>" >> index.html
 
     # Locked Achievements
@@ -423,6 +442,8 @@ There are $total Achievements. Some achievements can be leveled up depending on 
     # Update the RSS feed
     echo '<?xml version="1.0" encoding="utf-8"?><rss version="2.0"><channel>' > index.rss
     echo "<title>${user}'s Git Achievements</title>" >> index.rss
+    echo "<description></description>" >> index.rss
+    echo "<link></link>" >> index.rss
     cat "${ACHIEVEMENTSLOGFILE}"  | grep -ve '^$' | grep -v 'Git Achievement Unlocked!' | grep -v '*' | sed -e 's/^ *//g'  -e 's/ *$//g' | awk '{ if (NR % 2 != 0) printf "<item><title>" $0 "</title>"; else printf "<description>" $0 "</description></item>\n" }' | tail -n 20 | sed '1!G;h;$!d' >> index.rss
     echo '</channel></rss>' >> index.rss
 
